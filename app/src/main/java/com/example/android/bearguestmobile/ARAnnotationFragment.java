@@ -16,9 +16,14 @@
 
 package com.example.android.bearguestmobile;
 
+import android.arch.lifecycle.*;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.ar.core.AugmentedImage;
@@ -37,32 +42,22 @@ import java.util.Map;
  * This application demonstrates using augmented images to place anchor nodes. app to include image
  * tracking functionality.
  */
-public class ARAnnotationFragment extends AppCompatActivity {
+public class ARAnnotationFragment extends Fragment {
 
   private ArFragment arFragment;
   private ImageView fitToScanView;
-
-  // Create annotation object containing coordinates in accordance to specified menu
-  // Contains location, name of item, and integer value representing the associated menu
-  public class MenuItem {
-      public int menu;
-      public Vector3 position;
-      public String dishName;
-      public String description;
-
-      public MenuItem(int menu, Vector3 loc, String name, String description) {
-          this.menu = menu;
-          this.position = loc;
-          this.dishName = name;
-          this.description = description;
-      }
-  }
+  private View ARAnnotationView;
 
   // Augmented image and its associated center pose anchor, keyed by the augmented image in
   // the database.
-  private final Map<AugmentedImage, AugmentedImageNode> augmentedImageMap = new HashMap<>();
+  private final Map<AugmentedImage, AnnotationNode> augmentedImageMap = new HashMap<>();
 
-  @Override
+
+  public ARAnnotationFragment() {
+    // Required empty public constructor
+  }
+
+  /* @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -73,10 +68,30 @@ public class ARAnnotationFragment extends AppCompatActivity {
     arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdateFrame);
 
 
+  } */
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    ARAnnotationView = inflater.inflate(R.layout.fragment_arscanner, container, false);
+
+    FragmentManager f = getChildFragmentManager();
+    arFragment = (ArFragment)f.findFragmentById(R.id.ux_fragment);
+    fitToScanView = (ImageView) ARAnnotationView.findViewById(R.id.image_view_fit_to_scan);
+
+    arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdateFrame);
+
+    // Hide the back arrow and set title
+    ToolbarViewModel toolbarViewModel = ViewModelProviders.of((MainActivity)getActivity()).get(ToolbarViewModel.class);
+    toolbarViewModel.setShowBackArrow(false);
+    toolbarViewModel.setToolbarTitle("AR Annotation Tool");
+
+    // Inflate the layout for this fragment
+    return ARAnnotationView;
   }
 
   @Override
-  protected void onResume() {
+  public void onResume() {
     super.onResume();
     if (augmentedImageMap.isEmpty()) {
       fitToScanView.setVisibility(View.VISIBLE);
@@ -104,7 +119,7 @@ public class ARAnnotationFragment extends AppCompatActivity {
           // When an image is in PAUSED state, but the camera is not PAUSED, it has been detected,
           // but not yet tracked.
           String text = "Detected Image " + augmentedImage.getIndex();
-          SnackbarHelper.getInstance().showMessage(this, text);
+          SnackbarHelper.getInstance().showMessage(getActivity(), text);
           break;
 
         case TRACKING:
@@ -113,7 +128,7 @@ public class ARAnnotationFragment extends AppCompatActivity {
 
           // Create a new anchor for newly found images.
           if (!augmentedImageMap.containsKey(augmentedImage)) {
-            AugmentedImageNode node = new AugmentedImageNode(this);
+            AnnotationNode node = new AnnotationNode(getContext(), this.getViewLifecycleOwner());
             node.setImage(augmentedImage);
             augmentedImageMap.put(augmentedImage, node);
             arFragment.getArSceneView().getScene().addChild(node);

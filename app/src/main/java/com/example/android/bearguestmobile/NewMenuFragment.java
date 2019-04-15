@@ -100,13 +100,13 @@ public class NewMenuFragment extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    int index = AnnotationFragment.augmentedImageDatabase.addImage("restaurant id/name", bitmap);
+                    // int index = AnnotationFragment.augmentedImageDatabase.addImage("restaurant id/name", bitmap);
                     // imageview.setImageURI(selectedImage);
-                    AnnotationFragment arAnnotationFragment = new AnnotationFragment();
-                    // getActivity().getSupportFragmentManager().beginTransaction()
-                            // .replace(newMenuFragmentView.getId(), arAnnotationFragment, "findThisFragment")
-                            // .addToBackStack(null)
-                            // .commit();
+
+                    transaction = getFragmentManager().beginTransaction();
+                    ARAnnotationFragment arAnnotationFragment = new ARAnnotationFragment();
+                    transaction.replace(R.id.fragment_container, arAnnotationFragment, MAIN_TAB_FRAGMENT);
+                    transaction.commit();
                 }
                 break;
         }

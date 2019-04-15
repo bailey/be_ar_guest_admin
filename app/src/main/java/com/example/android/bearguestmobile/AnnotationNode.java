@@ -16,6 +16,8 @@
 
 package com.example.android.bearguestmobile;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -66,7 +68,7 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
   private static Context _context;
 
-  public AnnotationNode(Context context) {
+  public AnnotationNode(Context context, LifecycleOwner owner) {
     _context = context;
     // Upon construction, start loading the models for the corners of the frame.
     if (arrow == null) {

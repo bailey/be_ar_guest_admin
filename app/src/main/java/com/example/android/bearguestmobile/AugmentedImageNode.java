@@ -1,15 +1,11 @@
 package com.example.android.bearguestmobile;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.google.ar.core.AugmentedImage;
 import com.google.ar.sceneform.AnchorNode;
@@ -17,10 +13,8 @@ import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings({"AndroidApiChecker"})
@@ -37,7 +31,7 @@ public class AugmentedImageNode extends AnchorNode {
         if (pin == null) {
             pin =
                     ModelRenderable.builder()
-                            .setSource(context, Uri.parse("Pin.sfb"))
+                            .setSource(context, Uri.parse("models/Pin.sfb"))
                             .build();
         }
         this.context = context;

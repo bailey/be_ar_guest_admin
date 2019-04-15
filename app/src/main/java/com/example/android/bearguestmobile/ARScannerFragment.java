@@ -30,7 +30,7 @@ public class ARScannerFragment extends Fragment {
 
     // Augmented image and its associated center pose anchor, keyed by the augmented image in
     // the database.
-    private final Map<AugmentedImage, AugmentedImageNode> augmentedImageMap = new HashMap<>();
+    private final Map<AugmentedImage, AnnotationNode> augmentedImageMap = new HashMap<>();
 
     public ARScannerFragment() {
         // Required empty public constructor
@@ -90,7 +90,7 @@ public class ARScannerFragment extends Fragment {
 
                     // Create a new anchor for newly found images.
                     if (!augmentedImageMap.containsKey(augmentedImage)) {
-                        AugmentedImageNode node = new AugmentedImageNode((Context)getContext());
+                        AnnotationNode node = new AnnotationNode((Context)getContext());
                         node.setImage(augmentedImage);
                         augmentedImageMap.put(augmentedImage, node);
                         arFragment.getArSceneView().getScene().addChild(node);

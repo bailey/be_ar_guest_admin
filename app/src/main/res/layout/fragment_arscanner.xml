@@ -4,10 +4,10 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".ARScannerFragment">
+tools:context=".ARAnnotationFragment">
 
 
-<fragment android:name="com.example.android.bearguestmobile.AugmentedImageFragment"
+<fragment android:name="com.example.android.bearguestmobile.AnnotationFragment"
     android:id="@+id/ux_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
