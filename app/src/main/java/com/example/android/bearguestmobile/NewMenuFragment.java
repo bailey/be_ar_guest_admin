@@ -48,7 +48,7 @@ public class NewMenuFragment extends Fragment {
         //get the spinner from the xml.
         Spinner parkdropdown = newMenuFragmentView.findViewById(R.id.parkspinner);
         //create a list of items for the spinner.
-        CharSequence[] park_items = new CharSequence[]{"Magic Kingdom", "Epcot", "Hollywood Studios"};
+        CharSequence[] park_items = new CharSequence[]{"Magic Kingdom", "Epcot", "Hollywood Studios", "Animal Kingdom", "Typhoon Lagoon"};
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, park_items);
@@ -111,6 +111,8 @@ public class NewMenuFragment extends Fragment {
                 break;
         }
     }
+
+    //listener in onActivityCreated for park selection and query for land list associated
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

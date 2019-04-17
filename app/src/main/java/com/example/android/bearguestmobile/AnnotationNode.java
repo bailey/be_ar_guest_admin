@@ -56,20 +56,24 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
   // The augmented image represented by this node.
   private AugmentedImage image;
+  private String imageName;
 
   // Arrow and plane.  We use completable futures here to simplify
   // the error handling and asynchronous loading.  The loading is started with the
   // first construction of an instance, and then used when the image is set.
+  private LifecycleOwner owner;
   private static CompletableFuture<ModelRenderable> arrow;
   private static PopupWindow popup;
   private static ModelRenderable plane;
   private static Material transparentMaterial;
+  String[] restaurantNameNum;
 
 
   private static Context _context;
 
   public AnnotationNode(Context context, LifecycleOwner owner) {
     _context = context;
+    this.owner = owner;
     // Upon construction, start loading the models for the corners of the frame.
     if (arrow == null) {
       arrow = ModelRenderable.builder().setSource(context, Uri.parse("models/Pin.sfb")).build();
@@ -90,7 +94,9 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
    */
   @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
   public void setImage(AugmentedImage image) {
+
     this.image = image;
+    this.imageName = image.getName();
 
     // If any of the models are not loaded, then recurse when all are loaded.
     if (!arrow.isDone()) {
@@ -102,6 +108,10 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
                         return null;
                       });
     }
+
+    // split imageName from underscore
+    // index[0] of restaurantNameNum has the restaurant name, index[1] as page number
+    restaurantNameNum = imageName.split("[_\\.]");
 
     // Set the anchor based on the center of the image.
     setAnchor(image.createAnchor(image.getCenterPose()));
@@ -183,8 +193,8 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
           Toast.makeText(_context, "Menu item added!", Toast.LENGTH_SHORT).show();
 
-          Log.i("AlertDialog","TextEntry 1 Entered "+inp1.getText().toString());
-          Log.i("AlertDialog","TextEntry 2 Entered "+inp2.getText().toString());
+          // Log.i("AlertDialog","TextEntry 1 Entered "+inp1.getText().toString());
+          // Log.i("AlertDialog","TextEntry 2 Entered "+inp2.getText().toString());
 
           popup.dismiss();
         }
