@@ -2,6 +2,7 @@ package com.example.android.bearguestmobile;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -28,6 +30,7 @@ public class DashboardFragment extends Fragment {
     private View dashboardFragmentView;
     private FirebaseAuth mAuth;
     private Toolbar topToolbar;
+    private Context context;
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
@@ -37,6 +40,8 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         dashboardFragmentView = inflater.inflate(R.layout.dashboard_fragment, container, false);
+        context = dashboardFragmentView.getContext();
+
         mAuth = FirebaseAuth.getInstance();
 
         // Set screen title
@@ -51,6 +56,14 @@ public class DashboardFragment extends Fragment {
             public void onChanged(@Nullable Profile profile) {
                 ((TextView) dashboardFragmentView.findViewById(R.id.dashboard_welcome_user))
                         .setText("Welcome, " + profile.getfName() + "!");
+                // if they are not an admin, log them out
+                if(profile!=null && !profile.getRole().equals("admin")) {
+                    ((MainActivity) getActivity()).finish();
+                    startActivity(new Intent(context, FirebaseUIActivity.class));
+                    mAuth.signOut();
+
+                    Toast.makeText(context, "Sorry, this is for admin users only", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

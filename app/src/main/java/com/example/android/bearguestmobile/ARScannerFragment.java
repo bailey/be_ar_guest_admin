@@ -90,7 +90,7 @@ public class ARScannerFragment extends Fragment {
 
                     // Create a new anchor for newly found images.
                     if (!augmentedImageMap.containsKey(augmentedImage)) {
-                        AnnotationNode node = new AnnotationNode((Context)getContext(), this.getViewLifecycleOwner());
+                        AnnotationNode node = new AnnotationNode((Context)getContext(), this.getViewLifecycleOwner(), this.ARScannerView);
                         node.setImage(augmentedImage);
                         augmentedImageMap.put(augmentedImage, node);
                         arFragment.getArSceneView().getScene().addChild(node);

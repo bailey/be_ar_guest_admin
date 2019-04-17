@@ -128,7 +128,7 @@ public class ARAnnotationFragment extends Fragment {
 
           // Create a new anchor for newly found images.
           if (!augmentedImageMap.containsKey(augmentedImage)) {
-            AnnotationNode node = new AnnotationNode(getContext(), this.getViewLifecycleOwner());
+            AnnotationNode node = new AnnotationNode(getContext(), this.getViewLifecycleOwner(), ARAnnotationView);
             node.setImage(augmentedImage);
             augmentedImageMap.put(augmentedImage, node);
             arFragment.getArSceneView().getScene().addChild(node);

@@ -94,19 +94,20 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        // String thisUser = mAuth.getCurrentUser().getProviderId();
-                        //Profile user = UserRepository.getInstance().getUser(thisUser).getValue();
+                        // String thisUser = mAuth.getCurrentUser().getUid();
+                        // Profile user = UserRepository.getInstance().getUserSynchronous(thisUser).getValue();
 
                         if (task.isSuccessful()) {
                             // check if user is admin or not
                             // if (user != null) {
                                 // ^ && user.getRole == "admin"
                                 // Toast.makeText((FirebaseUIActivity)getActivity(), "User role: " + user.getRole(), Toast.LENGTH_SHORT).show();
+                                // Log.v("login", "User = " + user.getRole());
                                 currentUser = mAuth.getCurrentUser();
                                 activity.finish();
                                 startActivity(new Intent(activity.getApplicationContext(),
                                         MainActivity.class));
-                            // }
+                            //}
                         } else {
                             Log.v("mAuth signin", "LoginUserWithEmail:Fail", task.getException());
 

@@ -38,7 +38,7 @@ public class ItemListFragment extends Fragment {
         itemFragmentView = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // set up the RecyclerView list of items
-        RecyclerView recyclerView = ((RecyclerView) itemFragmentView).findViewById(R.id.rvItemList);
+        RecyclerView recyclerView = (RecyclerView) itemFragmentView.findViewById(R.id.rvItemList);
         Context context = itemFragmentView.getContext();
 
         // Set list adapter
@@ -51,23 +51,24 @@ public class ItemListFragment extends Fragment {
         toolbarViewModel.setToolbarTitle("Menu Items");
         toolbarViewModel.setShowBackArrow(true);
 
-        // FloatingActionButton arButton = itemFragmentView.findViewById(R.id.floatingActionButton);
+        FloatingActionButton arButton = itemFragmentView.findViewById(R.id.floatingActionButton);
 
-        /* arButton.setOnTouchListener(new View.OnTouchListener() {
+        arButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_UP){
-                    Toast.makeText((FirebaseUIActivity)getActivity(), "Hey my dude", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText((MainActivity)getActivity(), "Hey my dude", Toast.LENGTH_SHORT).show();
 
-                    // transaction = getFragmentManager().beginTransaction();
-                    // ARAnnotationFragment arAnnotationFragment = new ARAnnotationFragment();
-                    // transaction.replace(R.id.fragment_container, arAnnotationFragment, MAIN_TAB_FRAGMENT);
-                    // transaction.commit();
+                    transaction = getFragmentManager().beginTransaction();
+                    ARAnnotationFragment arAnnotationFragment = new ARAnnotationFragment();
+                    transaction.replace(R.id.fragment_container, arAnnotationFragment, MAIN_TAB_FRAGMENT);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                     return true;
                 }
                 return true; // consume the event
             }
-        }); */
+        });
 
         return itemFragmentView;
     }

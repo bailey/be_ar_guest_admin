@@ -70,10 +70,13 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
 
   private static Context _context;
+  private static View myView;
 
-  public AnnotationNode(Context context, LifecycleOwner owner) {
+  public AnnotationNode(Context context, LifecycleOwner owner, View view) {
     _context = context;
     this.owner = owner;
+    myView = view;
+
     // Upon construction, start loading the models for the corners of the frame.
     if (arrow == null) {
       arrow = ModelRenderable.builder().setSource(context, Uri.parse("models/Pin.sfb")).build();
@@ -161,6 +164,8 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
       // Place directly at touch location
       node.setWorldPosition(hitTestResult.getPoint());
+      float x_val = hitTestResult.getPoint().x;
+      float z_val = hitTestResult.getPoint().z;
       node.setRenderable(arrow.getNow(null));
       // scale arrow down to reasonable size
       node.setWorldScale(new Vector3(0.01f, 0.01f, 0.01f));
@@ -178,6 +183,8 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
               700,
               500,
               true);
+      // TODO: 4/17/19 OFFSET VERTICALLY 
+      popup.showAtLocation(myView, Gravity.CENTER, 0, 0);
 
 
       final EditText inp1 = v.findViewById(R.id.nameEntry);
@@ -191,7 +198,7 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
         public void onClick(View v) {
           //add to database here
 
-          Toast.makeText(_context, "Menu item added!", Toast.LENGTH_SHORT).show();
+          Toast.makeText(_context, "X = " + x_val + "Z = " + z_val, Toast.LENGTH_SHORT).show();
 
           // Log.i("AlertDialog","TextEntry 1 Entered "+inp1.getText().toString());
           // Log.i("AlertDialog","TextEntry 2 Entered "+inp2.getText().toString());
