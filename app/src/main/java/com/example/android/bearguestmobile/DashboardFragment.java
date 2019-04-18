@@ -70,6 +70,47 @@ public class DashboardFragment extends Fragment {
         return dashboardFragmentView;
     }
 
+    /* public void setButtonListener() {
+        Button button = dashboardFragmentView.findViewById(R.id.button_test);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v == button) {
+                    // Add new menu item - hardcode temporarily
+
+                    /**
+                     * Add an item
+                     * Input:
+                     * {
+                     *     "restaurantID": number, // REQUIRED
+                     *     "itemName": string, // REQUIRED
+                     *     "itemDescription": string,
+                     *     "secret": boolean, // REQUIRED
+                     *     "vegan": boolean, // REQUIRED
+                     *     "substitution": string,
+                     *     "itemStatus": string, // REQUIRED
+                     *     "x": null,
+                     *     "z": null
+                     * }
+                     */
+
+                    /* MenuItem newItem = new MenuItem();
+                    newItem.setRestaurantID(1); // will be dashboardviewmodel.getselectedrestaurant.getid?
+                    newItem.setItemName("Delicious Item Added from app");
+                    newItem.setItemDescription("Very tasty, yay disney");
+                    newItem.setSecret(0);
+                    newItem.setVegan(1);
+                    newItem.setSubstitution("None");
+                    newItem.setItemStatus("AVAILABLE");
+                    newItem.setX((float)0.0);
+                    newItem.setZ((float)0.0);
+
+                    DashboardRepository.getInstance().addMenuItem(newItem);
+                }
+            }
+        });
+    } */
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -118,8 +118,8 @@ public class ARAnnotationFragment extends Fragment {
         case PAUSED:
           // When an image is in PAUSED state, but the camera is not PAUSED, it has been detected,
           // but not yet tracked.
-          String text = "Detected Image " + augmentedImage.getIndex();
-          SnackbarHelper.getInstance().showMessage(getActivity(), text);
+          // String text = "Detected Image " + augmentedImage.getIndex();
+          // SnackbarHelper.getInstance().showMessage(getActivity(), text);
           break;
 
         case TRACKING:

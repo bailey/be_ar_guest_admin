@@ -68,7 +68,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
             FragmentTransaction transaction = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
             transaction
-                    .replace(R.id.fragment_container, itemListFragment)
+                    .replace(R.id.fragment_container, itemListFragment, "ITEM_LIST_FRAGMENT")
                     .addToBackStack(null)
                     .commit();
         }

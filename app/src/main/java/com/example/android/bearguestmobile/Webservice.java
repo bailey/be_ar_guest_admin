@@ -38,6 +38,13 @@ public interface Webservice {
     @POST("/profile/getProfileById")
     Call<List<Profile>> getUser(@Body Uid uid);
 
+    @POST("/item/add")
+    Call<MenuItem> addMenuItem(@Body MenuItem item);
+
+    // NEW for delete item. Replace POST"/..." with actual route, if different
+    @POST("item/delete")
+    Call<ItemID> deleteMenuItem(@Body ItemID item);
+
     @POST("review/getAll")
     Call<List<Review>> getAllReviews();
 

@@ -246,6 +246,51 @@ public class DashboardRepository {
         return itemData;
     }
 
+    // Add a new menuItem
+    public void addMenuItem(MenuItem item) {
+        // Make API call
+        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
+        webservice = retrofit.create(Webservice.class);
+        Call<MenuItem> call = webservice.addMenuItem(item);
+
+        // Handle API response, update value of restaurantData which notifies ViewModel
+        call.enqueue(new Callback<MenuItem>() {
+            @Override
+            public void onResponse(Call<MenuItem> call, Response<MenuItem> response) {
+                if(response.isSuccessful()) {
+                    Log.v("Dash Repo addItem", "on response successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MenuItem> call, Throwable t) {
+                Log.v("Dash Repo addItem", "on Failure", t);
+            }
+        });
+    }
+
+    public void deleteMenuItem(ItemID itemID) {
+        // Make API call
+        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
+        webservice = retrofit.create(Webservice.class);
+        Call<ItemID> call = webservice.deleteMenuItem(itemID);
+
+        // Handle API response, update value of restaurantData which notifies ViewModel
+        call.enqueue(new Callback<ItemID>() {
+            @Override
+            public void onResponse(Call<ItemID> call, Response<ItemID> response) {
+                if(response.isSuccessful()) {
+                    Log.v("Dash Repo delete item", "on response successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemID> call, Throwable t) {
+                Log.v("Dash Repo delete item", "on Failure", t);
+            }
+        });
+    }
+
     public synchronized static DashboardRepository getInstance() {
         //TODO No need to implement this singleton in Part #2 since Dagger will handle it ...
         if (dashboardRepository == null) {

@@ -24,6 +24,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -295,10 +296,14 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
       popup = new PopupWindow(
               v,
               700,
-              500,
+              600,
               true);
-      // TODO: 4/17/19 OFFSET VERTICALLY 
+      // popup.setOutsideTouchable(false);
+      // popup.setFocusable(false);
       popup.showAtLocation(myView, Gravity.NO_GRAVITY, 170, 200);
+      // popup.setOutsideTouchable(true);
+      // popup.setTouchable(true);
+      // popup.setBackgroundDrawable(new BitmapDrawable());
 
 
       final EditText inp1 = v.findViewById(R.id.nameEntry);
@@ -313,18 +318,46 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
           //add to database here
 
           Toast.makeText(_context, "X = " + x_val + "Z = " + z_val, Toast.LENGTH_SHORT).show();
-
           // Log.i("AlertDialog","TextEntry 1 Entered "+inp1.getText().toString());
           // Log.i("AlertDialog","TextEntry 2 Entered "+inp2.getText().toString());
 
+          if (inp1.getText().length() != 0 && inp2.getText().length() != 0) {
+            //add to db here
+            popup.dismiss();
+          }
+          else {
+            Toast.makeText(_context, "Cannot add pin without name and substitution. Please try again.", Toast.LENGTH_SHORT).show();
+            popup.dismiss();
+            onRemoveChild(node);
+          }
+          // popup.dismiss();
+        }
+      });
+
+      final Button cancel = (Button) v.findViewById(R.id.cancel);
+
+      cancel.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+          popup.dismiss();
+          onRemoveChild(node);
+          // node.setLocalPosition(null);
+        }
+      });
+
+      popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        @Override
+        public void onDismiss() {
+          onRemoveChild(node);
           popup.dismiss();
         }
       });
 
+
       popup.showAtLocation(v, Gravity.TOP, 0, 6);
 
       //EditText usernameInput = (EditText) v.findViewById(R.layout.solar_controls.);
-
 
 
 
