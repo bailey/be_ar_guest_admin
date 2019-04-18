@@ -3,8 +3,6 @@ package com.example.android.bearguestmobile;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,8 +22,8 @@ import java.io.InputStream;
 public class AugmentedImageFragment extends ArFragment {
     private static final String TAG = "AugmentedImageFragment";
 
-    // menuImages.imgdb currently contains skipper canteen pages 1 and 2 and tony's town square
-    private static final String IMAGE_DATABASE = "menuImages.imgdb";
+    // menuImages1.imgdb currently contains skipper canteen pages 1 and 2 and tony's town square
+    private static final String IMAGE_DATABASE = "menuImages1.imgdb";
 
 
     // Do a runtime check for the OpenGL level available at runtime to avoid Sceneform crashing the

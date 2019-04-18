@@ -16,10 +16,16 @@
 
 package com.example.android.bearguestmobile;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +37,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.google.ar.core.AugmentedImage;
+import com.google.ar.core.Point;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
@@ -43,6 +50,7 @@ import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ShapeFactory;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -116,6 +124,46 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
     // index[0] of restaurantNameNum has the restaurant name, index[1] as page number
     restaurantNameNum = imageName.split("[_\\.]");
 
+    ///////////////////////
+
+    // Use repo and view model
+    // Create Restaurant java object with all fields null except restaurantName
+    MutableLiveData<Restaurant> thisRestaurantName = new MutableLiveData<>();
+    thisRestaurantName.setValue(new Restaurant(restaurantNameNum[0]));
+    Log.v("AR", "restaurant name = "+ restaurantNameNum[0]);
+
+    DashboardViewModel dashboardViewModel = ViewModelProviders.of((MainActivity)_context).get(DashboardViewModel.class);
+
+    dashboardViewModel.getMenuItemListForARByRestaurantName(thisRestaurantName).observe(owner, new Observer<List<MenuItem>>() {
+      @Override
+      public void onChanged(@Nullable List<MenuItem> menuItemList) {
+        List<MenuItem> menuItemObjs = (dashboardViewModel.getMenuItemListForARByRestaurantName(thisRestaurantName)).getValue();
+
+        if(menuItemList==null) {
+          // Show error message or "pins loading" message?
+          Log.v("AR", "menu item objs = null");
+        }
+        else {
+          Log.v("AR", "menu item objs size=" + menuItemList.size());
+          Log.v("AR", "item 1 = " + menuItemList.get(0));
+
+          // Test what has been returned
+          String allItems = "Items returned: ";
+          for(MenuItem m : menuItemList) {
+            allItems = allItems + ", " + m.getX();
+          }
+          Log.v("AR", "items returned: " + allItems);
+
+          // DISPLAY PINS HERE
+          addPins(menuItemList);
+
+        }
+      }
+    });
+
+
+    //////////////////////
+
     // Set the anchor based on the center of the image.
     setAnchor(image.createAnchor(image.getCenterPose()));
 
@@ -133,6 +181,64 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
               transparentMaterial);
       planeNode.setRenderable(plane);
     }
+  }
+
+  private void addPins(List<MenuItem> menuItemObjs) {
+
+
+    Vector3 localPosition = new Vector3();
+    Node pinNode;
+
+    for(MenuItem item: menuItemObjs) {
+
+      Log.v("AR", "cycling thru item="+item.getItemName() +"parsedInt=" + Integer.parseInt(restaurantNameNum[1]));
+
+      if (item.pageNum == Integer.parseInt(restaurantNameNum[1])) {
+        Log.v("AR", "entered if statement for item="+item.getItemName() +"parsedInt=" + Integer.parseInt(restaurantNameNum[1]));
+
+        localPosition.set(item.x  * image.getExtentX(), -0.01f, item.z  * image.getExtentZ());
+
+        Node node = new Node();
+        node.setParent(this);
+        Log.v("ARAnnotationNode","isTopLevel = " + node.isTopLevel());
+        node.setLocalPosition(localPosition);
+        node.setRenderable(arrow.getNow(null));
+        // scale arrow down to reasonable size
+        node.setWorldScale(new Vector3(0.01f, 0.01f, 0.01f));
+
+        // correct for arrow's initial rotation
+        Quaternion z = Quaternion.axisAngle(new Vector3(0f, 0f,1f), 0f); // rotate on z axis by 45 degrees
+        Quaternion y = Quaternion.axisAngle(new Vector3(1f, 0f,0), 0f); // rotate on x axis by 90 degrees
+        node.setLocalRotation(Quaternion.multiply(z, y));
+
+        node.setOnTapListener(new OnTapListener() {
+          @Override
+          public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
+            if (item.substitution == null)
+              item.substitution = "No substitutions necessary.";
+            new AlertDialog.Builder(_context)
+                    //.setTitle("Delete entry")
+                    .setMessage(item.substitution)
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("okay", new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int which) {
+                        // close window
+                      }
+                    })
+
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    //.setNegativeButton(android.R.string.no, null)
+                    //.setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+          }
+      });
+
+    }
+
+
+  }
   }
 
   public AugmentedImage getImage() {
@@ -162,10 +268,18 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
       //node.setWorldPosition(Vector3.add(hitTestResult.getPoint(), new Vector3(0f,0f,0.04f)));
       //node.setLocalPosition(new Vector3(0, 0.1f, 0)); // doesn't work? trying to raise the arrow up above menu in local frame
 
+      hitTestResult.getPoint().y = (float) -0.01;
       // Place directly at touch location
       node.setWorldPosition(hitTestResult.getPoint());
       float x_val = hitTestResult.getPoint().x;
+      float y_val = hitTestResult.getPoint().y ;
       float z_val = hitTestResult.getPoint().z;
+
+      // TODO: add menu item instance to db
+
+      // Log.v("ARAnnotationNode", "X Value = " + x_val);
+      // Log.v("ARAnnotationNode", "Y Value = " + y_val);
+      // Log.v("ARAnnotationNode", "Z Value = " + z_val);
       node.setRenderable(arrow.getNow(null));
       // scale arrow down to reasonable size
       node.setWorldScale(new Vector3(0.01f, 0.01f, 0.01f));
@@ -184,13 +298,13 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
               500,
               true);
       // TODO: 4/17/19 OFFSET VERTICALLY 
-      popup.showAtLocation(myView, Gravity.CENTER, 0, 0);
+      popup.showAtLocation(myView, Gravity.NO_GRAVITY, 170, 200);
 
 
       final EditText inp1 = v.findViewById(R.id.nameEntry);
       inp1.setHint("Name");
       final EditText inp2 = v.findViewById(R.id.editText);
-      inp2.setHint("Description");
+      inp2.setHint("Substitution");
       final Button add = (Button) v.findViewById(R.id.done);
 
       add.setOnClickListener(new View.OnClickListener() {
@@ -207,18 +321,11 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
         }
       });
 
-      popup.showAtLocation(v, Gravity.TOP, 0, -100);
+      popup.showAtLocation(v, Gravity.TOP, 0, 6);
 
       //EditText usernameInput = (EditText) v.findViewById(R.layout.solar_controls.);
 
 
-
-      // pop up prompt for menu item name/description?
-      //Node solarControls = new Node();
-      //solarControls.setParent(this);
-      //solarControls.setLocalScale(new Vector3(.5f, .5f, .5f));
-      //solarControls.setRenderable(popup.getNow(null));
-      //solarControls.setLocalPosition(new Vector3(0, 0.1f, -0.1f));
 
 
 

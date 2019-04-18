@@ -83,7 +83,7 @@ public class ARAnnotationFragment extends Fragment {
 
     // Hide the back arrow and set title
     ToolbarViewModel toolbarViewModel = ViewModelProviders.of((MainActivity)getActivity()).get(ToolbarViewModel.class);
-    toolbarViewModel.setShowBackArrow(false);
+    toolbarViewModel.setShowBackArrow(true);
     toolbarViewModel.setToolbarTitle("AR Annotation Tool");
 
     // Inflate the layout for this fragment
