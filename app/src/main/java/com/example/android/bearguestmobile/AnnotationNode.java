@@ -323,6 +323,23 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
           if (inp1.getText().length() != 0 && inp2.getText().length() != 0) {
             //add to db here
+
+              int pageNum = Integer.parseInt(restaurantNameNum[1]);
+              DashboardViewModel dashboardViewModel = ViewModelProviders.of((MainActivity)_context).get(DashboardViewModel.class);
+              MenuItem newItem = new MenuItem();
+              newItem.setRestaurantID(dashboardViewModel.getSelectedRestaurantID().getValue().getRestaurantID());
+              // newItem.setRestaurantID(1); // will be dashboardviewmodel.getselectedrestaurant.getid?
+              newItem.setItemName(inp1.getText().toString());
+              newItem.setItemDescription("Description pending.");
+              newItem.setSecret(0);
+              newItem.setVegan(1);
+              newItem.setSubstitution(inp2.getText().toString());
+              newItem.setPageNum(pageNum);
+              newItem.setItemStatus("AVAILABLE");
+              newItem.setX(x_val);
+              newItem.setZ(z_val);
+
+              DashboardRepository.getInstance().addMenuItem(newItem);
             popup.dismiss();
           }
           else {
