@@ -136,6 +136,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
                         // Route is not published yet, but it'll work like this (hopefully)
                         // DashboardRepository.getInstance().deleteMenuItem(itemToDelete);
+                        DashboardRepository.getInstance().deleteMenuItem(itemToDelete);
 
                         // Reload item view fragment to refresh comment list and overall rating
                         // this might not work... I'm searching by the tag ITEM_LIST_FRAGMENT which I added in

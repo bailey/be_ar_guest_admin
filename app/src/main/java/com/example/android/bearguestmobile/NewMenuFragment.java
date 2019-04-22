@@ -1,5 +1,7 @@
 package com.example.android.bearguestmobile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,6 +66,17 @@ public class NewMenuFragment extends Fragment {
         ArrayAdapter adapter2 = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, land_items);
         //set the spinners adapter to the previously created one.
         landdropdown.setAdapter(adapter2);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("You are currently using an unpaid subscription. Please email a .png image of your menu to support@bearguest.com to request a new menu.")
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //do things
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
 
         Button uploadImg = newMenuFragmentView.findViewById(R.id.button);
 

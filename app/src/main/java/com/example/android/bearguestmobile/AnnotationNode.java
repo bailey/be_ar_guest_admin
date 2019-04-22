@@ -197,7 +197,9 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
       if (item.pageNum == Integer.parseInt(restaurantNameNum[1])) {
         Log.v("AR", "entered if statement for item="+item.getItemName() +"parsedInt=" + Integer.parseInt(restaurantNameNum[1]));
 
-        localPosition.set(item.x  * image.getExtentX(), -0.01f, item.z  * image.getExtentZ());
+        // localPosition.set(item.x  * image.getExtentX(), -0.01f, item.z  * image.getExtentZ());
+
+        localPosition.set(item.x * image.getExtentX(), -0.01f, item.z * image.getExtentZ());
 
         Node node = new Node();
         node.setParent(this);
@@ -271,12 +273,15 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
 
       hitTestResult.getPoint().y = (float) -0.01;
       // Place directly at touch location
-      node.setWorldPosition(hitTestResult.getPoint());
+      //node.setWorldPosition(hitTestResult.getPoint());
       float x_val = hitTestResult.getPoint().x;
-      float y_val = hitTestResult.getPoint().y ;
       float z_val = hitTestResult.getPoint().z;
-
-      // TODO: add menu item instance to db
+      // node.worldToLocalPoint(hitTestResult.getPoint());
+      Vector3 coord = node.worldToLocalPoint(hitTestResult.getPoint());
+      node.setWorldPosition(hitTestResult.getPoint());
+      // node.setLocalPosition(coord);
+      float xval = coord.x;
+      float zval = coord.z;
 
       // Log.v("ARAnnotationNode", "X Value = " + x_val);
       // Log.v("ARAnnotationNode", "Y Value = " + y_val);
@@ -317,7 +322,7 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
         public void onClick(View v) {
           //add to database here
 
-          Toast.makeText(_context, "X = " + x_val + "Z = " + z_val, Toast.LENGTH_SHORT).show();
+          // Toast.makeText(_context, "X = " + x_val + "Z = " + z_val, Toast.LENGTH_SHORT).show();
           // Log.i("AlertDialog","TextEntry 1 Entered "+inp1.getText().toString());
           // Log.i("AlertDialog","TextEntry 2 Entered "+inp2.getText().toString());
 
@@ -336,8 +341,8 @@ public class AnnotationNode extends AnchorNode implements Scene.OnTouchListener 
               newItem.setSubstitution(inp2.getText().toString());
               newItem.setPageNum(pageNum);
               newItem.setItemStatus("AVAILABLE");
-              newItem.setX(x_val);
-              newItem.setZ(z_val);
+              newItem.setX(xval / image.getExtentX());
+              newItem.setZ(zval / image.getExtentZ());
 
               DashboardRepository.getInstance().addMenuItem(newItem);
             popup.dismiss();

@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Click the restaurants tab to make changes to current menus or click the AR tab to add a new menu")
-                .setCancelable(false)
+        builder.setMessage("Welcome admin!  Click the restaurants tab to make changes to current menus or click the AR tab to add or request a new menu.")
+                .setCancelable(true)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //do things
